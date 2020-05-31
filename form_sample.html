@@ -5,27 +5,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 </head>
 
 <body>
-    <form name="submit-to-google-sheet">
-        <input name="email" type="email" placeholder="Email" required>
-        <button type="submit">Send</button>
+    <form id="mainForm" target="_self" onsubmit="return postToGoogle();" action="" autocomplete="off">
+
+        <div>
+            <label>Name</label>
+            <input type="text" name="entry.268770822" placeholder="name" id="name" required/>
+        </div>
+
+        <div>
+            <label>Email</label>
+            <input type="text" name="entry.1197463288" placeholder="email" id="email" required/>
+        </div>
+
+        <div>
+            <input type="submit" id="submitForm">
+        </div>
+
     </form>
+    <h3 id="success-msg" style="text-align: center !important; margin-top:190px !important; display:none; color:#000"> Deu boa</h3>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyveKXCnxvyjmj5ZdJyg4aNyEENimzK7lLAIPOGTsN2dK4kbV0/exec'
-        const form = document.forms['submit-to-google-sheet']
+        function postToGoogle() {
+            var name = $("#name").val();
+            var email = $("#email").val();
 
-        form.addEventListener('submit', e => {
-            e.preventDefault()
-            fetch(scriptURL, {
-                    method: 'POST',
-                    body: new FormData(form)
-                })
-                .then(response => console.log('Success!', response))
-                .catch(error => console.error('Error!', error.message))
-        })
+            $.ajax({
+                url: "https://docs.google.com/forms/u/0/d/e/1FAIpQLSeLUOfcU6rpGv3q5bF_z-JqcfKy9cm-FE8wFAmAHAlI0bKYtw/formResponse?",
+                data: {
+                    "entry.268770822": name,
+                    "entry.1197463288": email
+                },
+                type: "POST",
+                dataType: "xml",
+                success: function(d) {},
+                error: function(x, y, z) {
+
+                    $('#success-msg').show();
+                    $('#mainForm').hide();
+
+                }
+            });
+            return false;
+        }
     </script>
 </body>
 
